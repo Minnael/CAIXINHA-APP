@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Controle de Gastos",
+    "slug": "controle-gastos-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "platforms": ["ios", "android"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.minnael.controlegastos"
+    },
+    "android": {
+      "package": "com.minnael.controlegastos"
+    }
+  }
+}
