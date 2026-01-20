@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useGastos } from '../contexts/GastoContext';
 import { useCategorias } from '../contexts/CategoriaContext';
 import Loading from '../components/Loading';
@@ -72,35 +73,49 @@ export default function GastosListScreen({ navigation }) {
 
   const renderGasto = ({ item }) => (
     <View style={styles.card}>
-      <View style={styles.cardHeader}>
-        <View style={styles.cardInfo}>
-          <Text style={styles.cardTitle}>{item.nome}</Text>
-          <Text style={styles.cardCategoria}>📁 {item.categoriaNome}</Text>
-          {item.descricao && (
-            <Text style={styles.cardDescription} numberOfLines={2}>
-              {item.descricao}
-            </Text>
-          )}
-          <Text style={styles.cardData}>
-            {new Date(item.criadoEm).toLocaleDateString('pt-BR', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-            })}
-          </Text>
-        </View>
-        
-        <View style={styles.cardActions}>
-          <Text style={styles.cardValor}>
-            R$ {item.valor.toFixed(2)}
-          </Text>
-          <TouchableOpacity
-            onPress={() => handleDelete(item.id)}
-            style={styles.deleteButton}
-          >
-            <Text style={styles.deleteButtonText}>🗑️</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.cardContent}>
+        <LinearGradient
+          colors={[theme.colors.primary + '15', theme.colors.primary + '05']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.cardGradient}
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardInfo}>
+              <Text style={styles.cardTitle}>{item.nome}</Text>
+              <View style={styles.categoriaTag}>
+                <Text style={styles.cardCategoria}>🏷️ {item.categoriaNome}</Text>
+              </View>
+              {item.descricao && (
+                <Text style={styles.cardDescription} numberOfLines={2}>
+                  {item.descricao}
+                </Text>
+              )}
+              <Text style={styles.cardData}>
+                📅 {new Date(item.criadoEm).toLocaleDateString('pt-BR', {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                })}
+              </Text>
+            </View>
+            
+            <View style={styles.cardActions}>
+              <View style={styles.valorContainer}>
+                <Text style={styles.valorLabel}>Valor</Text>
+                <Text style={styles.cardValor}>
+                  R$ {item.valor.toFixed(2)}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleDelete(item.id)}
+                style={styles.deleteButton}
+              >
+                <Text style={styles.deleteButtonText}>🗑️</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </LinearGradient>
       </View>
     </View>
   );
@@ -130,15 +145,22 @@ export default function GastosListScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Todos os Gastos</Text>
-        <View style={styles.totalContainer}>
-          <Text style={styles.totalLabel}>Total:</Text>
-          <Text style={styles.totalValor}>
-            R$ {calcularTotalGastos().toFixed(2)}
-          </Text>
+      <LinearGradient
+        colors={theme.gradients.primary}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.headerGradient}
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>📊 Meus Gastos</Text>
+          <View style={styles.totalContainer}>
+            <Text style={styles.totalLabel}>Total Gasto</Text>
+            <Text style={styles.totalValor}>
+              R$ {calcularTotalGastos().toFixed(2)}
+            </Text>
+          </View>
         </View>
-      </View>
+      </LinearGradient>
       
       {categorias.length > 0 && (
         <View style={styles.filterSection}>
@@ -190,39 +212,46 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
+  headerGradient: {
+    paddingTop: theme.spacing.xxxl,
+    paddingBottom: theme.spacing.lg,
+  },
   header: {
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.md,
-    paddingBottom: theme.spacing.sm,
-    backgroundColor: theme.colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
   },
   title: {
     fontSize: theme.fontSize.xxl,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.sm,
+    color: theme.colors.textWhite,
+    marginBottom: theme.spacing.md,
+    letterSpacing: 0.5,
   },
   totalContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   totalLabel: {
-    fontSize: theme.fontSize.md,
-    color: theme.colors.textSecondary,
-    marginRight: theme.spacing.sm,
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textWhite,
+    opacity: 0.95,
+    marginBottom: theme.spacing.xs,
+    fontWeight: theme.fontWeight.medium,
   },
   totalValor: {
-    fontSize: theme.fontSize.xl,
+    fontSize: theme.fontSize.xxxl,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.primary,
+    color: theme.colors.textWhite,
   },
   filterSection: {
     backgroundColor: theme.colors.surface,
+    paddingVertical: theme.spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
-    paddingVertical: theme.spacing.sm,
+    ...theme.shadows.sm,
   },
   filterList: {
     paddingHorizontal: theme.spacing.lg,
@@ -230,10 +259,10 @@ const styles = StyleSheet.create({
   filterChip: {
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
-    backgroundColor: theme.colors.surfaceDark,
+    backgroundColor: theme.colors.backgroundLight,
     borderRadius: theme.borderRadius.full,
     marginRight: theme.spacing.sm,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.border,
   },
   filterChipActive: {
@@ -243,10 +272,10 @@ const styles = StyleSheet.create({
   filterChipText: {
     fontSize: theme.fontSize.sm,
     color: theme.colors.text,
-    fontWeight: theme.fontWeight.medium,
+    fontWeight: theme.fontWeight.semibold,
   },
   filterChipTextActive: {
-    color: '#fff',
+    color: theme.colors.textWhite,
   },
   error: {
     margin: theme.spacing.lg,
@@ -255,11 +284,16 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
   },
   card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.md,
     marginBottom: theme.spacing.md,
-    ...theme.shadows.sm,
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden',
+    ...theme.shadows.md,
+  },
+  cardContent: {
+    backgroundColor: theme.colors.surface,
+  },
+  cardGradient: {
+    padding: theme.spacing.lg,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -271,39 +305,70 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: theme.fontSize.lg,
-    fontWeight: theme.fontWeight.semibold,
+    fontWeight: theme.fontWeight.bold,
     color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
+    marginBottom: theme.spacing.sm,
+  },
+  categoriaTag: {
+    alignSelf: 'flex-start',
+    backgroundColor: theme.colors.successLight,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 4,
+    borderRadius: theme.borderRadius.sm,
+    marginBottom: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
   },
   cardCategoria: {
     fontSize: theme.fontSize.sm,
-    color: theme.colors.primary,
-    fontWeight: theme.fontWeight.medium,
-    marginBottom: theme.spacing.xs,
+    color: theme.colors.primaryDark,
+    fontWeight: theme.fontWeight.semibold,
   },
   cardDescription: {
     fontSize: theme.fontSize.sm,
     color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.xs,
+    marginBottom: theme.spacing.sm,
+    lineHeight: 20,
   },
   cardData: {
     fontSize: theme.fontSize.xs,
     color: theme.colors.textLight,
+    fontWeight: theme.fontWeight.medium,
   },
   cardActions: {
     alignItems: 'flex-end',
+    justifyContent: 'space-between',
+  },
+  valorContainer: {
+    backgroundColor: theme.colors.successLight,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    alignItems: 'center',
+    marginBottom: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  valorLabel: {
+    fontSize: theme.fontSize.xs,
+    color: theme.colors.primaryDark,
+    marginBottom: 2,
+    fontWeight: theme.fontWeight.semibold,
   },
   cardValor: {
     fontSize: theme.fontSize.xl,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.secondary,
-    marginBottom: theme.spacing.sm,
+    color: theme.colors.primary,
   },
   deleteButton: {
-    padding: theme.spacing.xs,
+    backgroundColor: theme.colors.errorLight,
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.error,
   },
   deleteButtonText: {
-    fontSize: 20,
+    fontSize: 18,
   },
   empty: {
     alignItems: 'center',
@@ -322,8 +387,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     padding: theme.spacing.lg,
-    backgroundColor: theme.colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
+    paddingBottom: theme.spacing.md,
   },
 });

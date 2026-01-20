@@ -6,10 +6,11 @@ import {
   ActivityIndicator,
   View 
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import theme from '../styles/theme';
 
 /**
- * Componente de botão customizado e reutilizável
+ * Componente de botão customizado e reutilizável com design moderno
  */
 export const Button = ({ 
   title, 
@@ -20,39 +21,45 @@ export const Button = ({
   icon = null,
   style = {},
   textStyle = {},
+  size = 'medium', // 'small', 'medium', 'large'
 }) => {
   const isDisabled = disabled || loading;
   
+  const useGradient = !isDisabled && (variant === 'primary' || variant === 'secondary');
+  
+  const gradientColors = variant === 'primary' 
+    ? theme.gradients.primary 
+    : theme.gradients.secondary;
+  
   const buttonStyles = [
     styles.button,
-    variant === 'primary' && styles.buttonPrimary,
-    variant === 'secondary' && styles.buttonSecondary,
     variant === 'outline' && styles.buttonOutline,
     variant === 'danger' && styles.buttonDanger,
+    variant === 'ghost' && styles.buttonGhost,
     isDisabled && styles.buttonDisabled,
+    !useGradient && variant === 'primary' && styles.buttonPrimary,
+    !useGradient && variant === 'secondary' && styles.buttonSecondary,
+    size === 'small' && styles.buttonSmall,
+    size === 'large' && styles.buttonLarge,
     style,
   ];
   
   const textStyles = [
     styles.buttonText,
-    variant === 'primary' && styles.textPrimary,
-    variant === 'secondary' && styles.textSecondary,
+    size === 'small' && styles.textSmall,
+    size === 'large' && styles.textLarge,
+    (variant === 'primary' || variant === 'secondary' || variant === 'danger') && styles.textWhite,
     variant === 'outline' && styles.textOutline,
-    variant === 'danger' && styles.textDanger,
+    variant === 'ghost' && styles.textGhost,
     isDisabled && styles.textDisabled,
     textStyle,
   ];
   
-  return (
-    <TouchableOpacity
-      style={buttonStyles}
-      onPress={onPress}
-      disabled={isDisabled}
-      activeOpacity={0.7}
-    >
+  const content = (
+    <>
       {loading ? (
         <ActivityIndicator 
-          color={variant === 'outline' ? theme.colors.primary : '#fff'} 
+          color={variant === 'outline' || variant === 'ghost' ? theme.colors.primary : '#fff'} 
         />
       ) : (
         <View style={styles.buttonContent}>
@@ -60,19 +67,63 @@ export const Button = ({
           <Text style={textStyles}>{title}</Text>
         </View>
       )}
+    </>
+  );
+  
+  if (useGradient) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={isDisabled}
+        activeOpacity={0.8}
+        style={buttonStyles}
+      >
+        <LinearGradient
+          colors={gradientColors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.gradient}
+        >
+          {content}
+        </LinearGradient>
+      </TouchableOpacity>
+    );
+  }
+  
+  return (
+    <TouchableOpacity
+      style={buttonStyles}
+      onPress={onPress}
+      disabled={isDisabled}
+      activeOpacity={0.8}
+    >
+      {content}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: 50, // Bordas completamente arredondadas (pill button)
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 48,
-    ...theme.shadows.sm,
+    overflow: 'hidden',
+  },
+  gradient: {
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 52,
+    borderRadius: 50,
+  },
+  buttonSmall: {
+    minHeight: 40,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+  },
+  buttonLarge: {
+    minHeight: 60,
   },
   buttonContent: {
     flexDirection: 'row',
@@ -84,37 +135,66 @@ const styles = StyleSheet.create({
   },
   buttonPrimary: {
     backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    minHeight: 52,
+    borderRadius: 50,
   },
   buttonSecondary: {
     backgroundColor: theme.colors.secondary,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    minHeight: 52,
+    borderRadius: 50,
   },
   buttonOutline: {
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: theme.colors.primary,
+    paddingVertical: theme.spacing.md - 2,
+    paddingHorizontal: theme.spacing.lg,
+    minHeight: 52,
+    borderRadius: 50,
   },
   buttonDanger: {
     backgroundColor: theme.colors.error,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    minHeight: 52,
+    borderRadius: 50,
+  },
+  buttonGhost: {
+    backgroundColor: 'transparent',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    minHeight: 52,
+    borderRadius: 50,
   },
   buttonDisabled: {
     backgroundColor: theme.colors.disabled,
-    ...theme.shadows.sm,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: 50,
   },
   buttonText: {
     fontSize: theme.fontSize.md,
     fontWeight: theme.fontWeight.semibold,
+    letterSpacing: 0.5,
   },
-  textPrimary: {
-    color: '#fff',
+  textSmall: {
+    fontSize: theme.fontSize.sm,
   },
-  textSecondary: {
-    color: '#fff',
+  textLarge: {
+    fontSize: theme.fontSize.lg,
+  },
+  textWhite: {
+    color: theme.colors.textWhite,
   },
   textOutline: {
     color: theme.colors.primary,
   },
-  textDanger: {
-    color: '#fff',
+  textGhost: {
+    color: theme.colors.primary,
   },
   textDisabled: {
     color: theme.colors.disabledText,

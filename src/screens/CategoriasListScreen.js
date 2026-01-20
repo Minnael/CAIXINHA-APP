@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useCategorias } from '../contexts/CategoriaContext';
 import { useAuth } from '../contexts/AuthContext';
 import Loading from '../components/Loading';
@@ -129,12 +130,22 @@ export default function CategoriasListScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Minhas Categorias</Text>
-        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Sair</Text>
-        </TouchableOpacity>
-      </View>
+      <LinearGradient
+        colors={theme.gradients.primary}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.headerGradient}
+      >
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.title}>📋 Categorias</Text>
+            <Text style={styles.subtitle}>Organize seus gastos</Text>
+          </View>
+          <TouchableOpacity onPress={logout} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>🚪 Sair</Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
       
       {error && <ErrorMessage message={error} style={styles.error} />}
       
@@ -158,12 +169,12 @@ export default function CategoriasListScreen({ navigation }) {
         )}
       />
       
-      <View style={styles.fab}>
-        <Button
-          title="+ Nova Categoria"
-          onPress={() => navigation.navigate('CategoriaForm')}
-        />
-      </View>
+      <TouchableOpacity 
+        style={styles.fab}
+        onPress={() => navigation.navigate('CategoriaForm')}
+      >
+        <Text style={styles.fabIcon}>+</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -173,28 +184,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
+  headerGradient: {
+    paddingTop: theme.spacing.xxxl,
+    paddingBottom: theme.spacing.lg,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
   },
   title: {
     fontSize: theme.fontSize.xxl,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.text,
+    color: theme.colors.textWhite,
+    letterSpacing: 0.5,
+  },
+  subtitle: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textWhite,
+    opacity: 0.95,
+    marginTop: theme.spacing.xs,
   },
   logoutButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   logoutText: {
-    color: theme.colors.error,
-    fontSize: theme.fontSize.md,
+    color: theme.colors.textWhite,
+    fontSize: theme.fontSize.sm,
     fontWeight: theme.fontWeight.semibold,
   },
   error: {
@@ -202,19 +224,22 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.lg,
   },
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.lg,
-    marginBottom: theme.spacing.md,
+    padding: theme.spacing.sm,
+    marginBottom: theme.spacing.xs,
     ...theme.shadows.md,
+    borderLeftWidth: 4,
+    borderLeftColor: theme.colors.primary,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
   },
   cardTitleRow: {
     flexDirection: 'row',
@@ -222,61 +247,69 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   icone: {
-    fontSize: 32,
-    marginRight: theme.spacing.md,
+    fontSize: 22,
+    marginRight: theme.spacing.xs,
   },
   cardInfo: {
     flex: 1,
   },
   cardTitle: {
-    fontSize: theme.fontSize.lg,
+    fontSize: theme.fontSize.sm,
     fontWeight: theme.fontWeight.semibold,
     color: theme.colors.text,
   },
   cardDescription: {
-    fontSize: theme.fontSize.sm,
+    fontSize: theme.fontSize.xs,
     color: theme.colors.textSecondary,
-    marginTop: theme.spacing.xs,
+    marginTop: 2,
   },
   editButton: {
-    padding: theme.spacing.sm,
+    padding: theme.spacing.xs,
   },
   editButtonText: {
-    fontSize: 20,
+    fontSize: 18,
   },
   cardBody: {
-    marginTop: theme.spacing.sm,
+    marginTop: theme.spacing.xs,
   },
   valores: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
+    backgroundColor: theme.colors.successLight,
+    padding: theme.spacing.xs,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
   divisor: {
-    width: 1,
-    height: 40,
-    backgroundColor: theme.colors.border,
+    width: 2,
+    height: 28,
+    backgroundColor: theme.colors.primary,
   },
   labelMenor: {
-    fontSize: theme.fontSize.xs,
+    fontSize: 10,
     color: theme.colors.textSecondary,
-    marginBottom: theme.spacing.xs,
+    marginBottom: 2,
     textAlign: 'center',
+    fontWeight: theme.fontWeight.semibold,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   valorAtual: {
-    fontSize: theme.fontSize.xl,
+    fontSize: theme.fontSize.lg,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.secondary,
+    color: theme.colors.primary,
     textAlign: 'center',
   },
   valorExcedido: {
     color: theme.colors.error,
   },
   valorMeta: {
-    fontSize: theme.fontSize.xl,
+    fontSize: theme.fontSize.lg,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.text,
+    color: theme.colors.textDark,
     textAlign: 'center',
   },
   progressContainer: {
@@ -291,10 +324,12 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
     overflow: 'hidden',
     marginRight: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
   progressFill: {
     height: '100%',
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.primary,
     borderRadius: theme.borderRadius.full,
   },
   progressFillOver: {
@@ -302,13 +337,13 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: theme.fontSize.sm,
-    fontWeight: theme.fontWeight.semibold,
-    color: theme.colors.textSecondary,
+    fontWeight: theme.fontWeight.bold,
+    color: theme.colors.primary,
     minWidth: 40,
     textAlign: 'right',
   },
   totalGastos: {
-    fontSize: theme.fontSize.sm,
+    fontSize: theme.fontSize.xs,
     color: theme.colors.textSecondary,
     textAlign: 'center',
   },
@@ -328,9 +363,25 @@ const styles = StyleSheet.create({
     color: theme.colors.textLight,
   },
   fab: {
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...theme.shadows.lg,
+    elevation: 8,
+  },
+  fabIcon: {
+    fontSize: 32,
+    color: theme.colors.textWhite,
+    fontWeight: theme.fontWeight.bold,
+    lineHeight: 32,
+    textAlign: 'center',
+    marginTop: 4,
+    marginLeft: 2,
   },
 });

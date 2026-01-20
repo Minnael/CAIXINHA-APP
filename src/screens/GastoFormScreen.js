@@ -129,12 +129,14 @@ export default function GastoFormScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardView}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           <Text style={styles.title}>Novo Gasto</Text>
           
@@ -196,14 +198,7 @@ export default function GastoFormScreen({ route, navigation }) {
             loading={loading}
             style={styles.submitButton}
           />
-          
-          <Button
-            title="Cancelar"
-            onPress={() => navigation.goBack()}
-            variant="outline"
-            disabled={loading}
-            style={styles.cancelButton}
-          />
+
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -247,9 +242,6 @@ const styles = StyleSheet.create({
     height: 50,
   },
   submitButton: {
-    marginTop: theme.spacing.md,
-  },
-  cancelButton: {
     marginTop: theme.spacing.md,
     marginBottom: theme.spacing.xl,
   },

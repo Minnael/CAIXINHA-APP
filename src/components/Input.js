@@ -80,34 +80,40 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: theme.fontSize.sm,
-    fontWeight: theme.fontWeight.medium,
+    fontWeight: theme.fontWeight.semibold,
     color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
+    marginBottom: theme.spacing.sm,
+    letterSpacing: 0.3,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.surface,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.lg,
     paddingHorizontal: theme.spacing.md,
+    minHeight: 48,
   },
   inputContainerFocused: {
     borderColor: theme.colors.primary,
-    borderWidth: 2,
+    backgroundColor: theme.colors.backgroundLight,
+    ...theme.shadows.sm,
   },
   inputContainerError: {
     borderColor: theme.colors.error,
+    backgroundColor: theme.colors.errorLight,
   },
   inputContainerDisabled: {
     backgroundColor: theme.colors.surfaceDark,
+    borderColor: theme.colors.borderLight,
   },
   input: {
     flex: 1,
     fontSize: theme.fontSize.md,
     color: theme.colors.text,
-    paddingVertical: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    fontWeight: theme.fontWeight.normal,
   },
   inputMultiline: {
     minHeight: 100,
@@ -124,6 +130,7 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.xs,
     color: theme.colors.error,
     marginTop: theme.spacing.xs,
+    fontWeight: theme.fontWeight.medium,
   },
 });
 

@@ -122,12 +122,14 @@ export default function CategoriaFormScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardView}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
           <Text style={styles.title}>
             {isEdit ? 'Editar Categoria' : 'Nova Categoria'}
@@ -189,14 +191,6 @@ export default function CategoriaFormScreen({ route, navigation }) {
               style={styles.deleteButton}
             />
           )}
-          
-          <Button
-            title="Cancelar"
-            onPress={() => navigation.goBack()}
-            variant="outline"
-            disabled={loading}
-            style={styles.cancelButton}
-          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -224,9 +218,6 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.md,
   },
   deleteButton: {
-    marginTop: theme.spacing.md,
-  },
-  cancelButton: {
     marginTop: theme.spacing.md,
     marginBottom: theme.spacing.xl,
   },

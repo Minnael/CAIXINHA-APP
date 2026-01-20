@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
 import Input from '../components/Input';
@@ -67,12 +68,20 @@ export default function LoginScreen({ navigation }) {
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.header}>
-            <Text style={styles.title}>Controle de Gastos</Text>
-            <Text style={styles.subtitle}>
-              Faça login para gerenciar suas finanças
-            </Text>
-          </View>
+          <LinearGradient
+            colors={theme.gradients.primary}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.headerGradient}
+          >
+            <View style={styles.header}>
+              <Text style={styles.emoji}>💰</Text>
+              <Text style={styles.title}>Caixinha</Text>
+              <Text style={styles.subtitle}>
+                Gerencie suas finanças com facilidade
+              </Text>
+            </View>
+          </LinearGradient>
 
           <View style={styles.form}>
             {error && <ErrorMessage message={error} />}
@@ -138,32 +147,44 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
-    padding: theme.spacing.lg,
+  },
+  headerGradient: {
+    paddingTop: theme.spacing.xxxl + theme.spacing.xl,
+    paddingBottom: theme.spacing.xxl,
+    paddingHorizontal: theme.spacing.lg,
+    borderBottomLeftRadius: theme.borderRadius.xxl,
+    borderBottomRightRadius: theme.borderRadius.xxl,
   },
   header: {
     alignItems: 'center',
-    marginBottom: theme.spacing.xl,
+  },
+  emoji: {
+    fontSize: 64,
+    marginBottom: theme.spacing.md,
   },
   title: {
     fontSize: theme.fontSize.xxxl,
     fontWeight: theme.fontWeight.bold,
-    color: theme.colors.primary,
+    color: theme.colors.textWhite,
     marginBottom: theme.spacing.sm,
+    letterSpacing: 1,
   },
   subtitle: {
     fontSize: theme.fontSize.md,
-    color: theme.colors.textSecondary,
+    color: theme.colors.textWhite,
     textAlign: 'center',
+    opacity: 0.95,
   },
   form: {
-    width: '100%',
+    padding: theme.spacing.lg,
+    marginTop: theme.spacing.xxl,
   },
   loginButton: {
-    marginTop: theme.spacing.md,
+    marginTop: theme.spacing.lg,
   },
   showPasswordText: {
     fontSize: 20,
+    color: theme.colors.textSecondary,
   },
   footer: {
     flexDirection: 'row',
@@ -178,6 +199,6 @@ const styles = StyleSheet.create({
   footerLink: {
     fontSize: theme.fontSize.md,
     color: theme.colors.primary,
-    fontWeight: theme.fontWeight.semibold,
+    fontWeight: theme.fontWeight.bold,
   },
 });

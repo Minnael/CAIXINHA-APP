@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 
 // Telas de autenticação
@@ -22,45 +23,79 @@ import Loading from '../components/Loading';
 import theme from '../styles/theme';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+const BottomTab = createBottomTabNavigator();
 
 /**
- * Navegação por tabs (Categorias e Gastos)
+ * Navegação por tabs no rodapé com emojis
  */
 function MainTabs() {
   return (
-    <Tab.Navigator
+    <BottomTab.Navigator
       screenOptions={{
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textSecondary,
         tabBarStyle: {
+          height: 80,
+          paddingBottom: 12,
+          paddingTop: 12,
           borderTopColor: theme.colors.border,
+          borderTopWidth: 1,
           backgroundColor: theme.colors.surface,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
         },
         headerShown: false,
       }}
     >
-      <Tab.Screen
+      <BottomTab.Screen
         name="CategoriasTab"
         component={CategoriasStack}
         options={{
           tabBarLabel: 'Categorias',
-          tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>📁</Text>
+          tabBarIcon: ({ color }) => (
+            <Text style={{ fontSize: 24, color }}>🏷️</Text>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // Resetar para a tela inicial do stack
+            const state = navigation.getState();
+            const categoriasRoute = state.routes.find(r => r.name === 'CategoriasTab');
+            
+            if (categoriasRoute?.state?.index > 0) {
+              navigation.navigate('CategoriasTab', {
+                screen: 'CategoriasList',
+              });
+            }
+          },
+        })}
       />
-      <Tab.Screen
+      <BottomTab.Screen
         name="GastosTab"
         component={GastosStack}
         options={{
           tabBarLabel: 'Gastos',
-          tabBarIcon: ({ color, size }) => (
-            <Text style={{ fontSize: size, color }}>💰</Text>
+          tabBarIcon: ({ color }) => (
+            <Text style={{ fontSize: 24, color }}>💰</Text>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // Resetar para a tela inicial do stack
+            const state = navigation.getState();
+            const gastosRoute = state.routes.find(r => r.name === 'GastosTab');
+            
+            if (gastosRoute?.state?.index > 0) {
+              navigation.navigate('GastosTab', {
+                screen: 'GastosList',
+              });
+            }
+          },
+        })}
       />
-    </Tab.Navigator>
+    </BottomTab.Navigator>
   );
 }
 
@@ -165,6 +200,3 @@ export default function AppNavigator() {
     </NavigationContainer>
   );
 }
-
-// Importação necessária para ícones
-import { Text } from 'react-native';
